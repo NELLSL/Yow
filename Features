@@ -1,0 +1,48 @@
+Proposed System Interface
+Ito ang magiging pangunahing pages o screens ng system.
+
+01. Login Page
+School logo and system name
+Email/username field
+Password field
+Login button
+Forgot password option
+
+02. Student Dashboard
+Welcome message
+Enrolled subjects
+Upcoming deadlines
+Recent announcements
+Pending assignments
+
+03. My Subjects / Learning Materials
+List of subjects
+Lessons and modules
+Downloadable files
+Teacher's uploaded resources
+
+04. Assignments and Quizzes
+Activity instructions
+Due dates
+File upload or online answers
+Submit button
+Submission status
+
+05. Grades and Progress
+Quiz scores
+Assignment grades
+Teacher feedback
+Academic progress
+
+06. Teacher Dashboard
+Manage subjects
+Upload learning materials
+Create quizzes and assignments
+Review student submissions
+Record grades and post announcements
+
+07. Admin Dashboard
+Manage student and teacher accounts
+Manage subjects and classes
+Monitor system records
+Configure system settings
