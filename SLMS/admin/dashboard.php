@@ -1,0 +1,8 @@
+<?php
+require_once __DIR__ . '/../includes/auth.php'; require_role(['admin']); require __DIR__ . '/../config/database.php'; $pageTitle='Admin Dashboard';
+$users=(int)$pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();$subjects=(int)$pdo->query('SELECT COUNT(*) FROM subjects')->fetchColumn();$acts=(int)$pdo->query('SELECT COUNT(*) FROM activities')->fetchColumn();$subs=(int)$pdo->query('SELECT COUNT(*) FROM submissions')->fetchColumn();
+require __DIR__ . '/../includes/header.php'; ?>
+<div class="welcome"><div><p class="eyebrow light">SYSTEM ADMINISTRATION</p><h1>System overview</h1><p>Monitor accounts and learning activity across SLMS.</p></div><div class="welcome-icon">⚙</div></div>
+<div class="stats-grid"><article class="stat-card"><span>Total accounts</span><strong><?= $users ?></strong></article><article class="stat-card"><span>Subjects</span><strong><?= $subjects ?></strong></article><article class="stat-card"><span>Activities</span><strong><?= $acts ?></strong></article><article class="stat-card"><span>Submissions</span><strong><?= $subs ?></strong></article></div>
+<section class="panel"><div class="panel-head"><h3>Administration</h3></div><div class="quick-links"><a class="quick-link" href="users.php"><strong>Manage accounts</strong><small>View students, teachers, and admins</small></a><a class="quick-link" href="subjects.php"><strong>Subjects & classes</strong><small>View subject records</small></a><a class="quick-link" href="records.php"><strong>System records</strong><small>View activity counts</small></a></div></section>
+<?php require __DIR__ . '/../includes/footer.php'; ?>

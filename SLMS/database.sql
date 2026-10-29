@@ -1,0 +1,80 @@
+CREATE DATABASE IF NOT EXISTS slms_db
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE slms_db;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  full_name VARCHAR(120) NOT NULL,
+  username VARCHAR(80) NOT NULL UNIQUE,
+  email VARCHAR(190) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  role ENUM('student','teacher','admin') NOT NULL DEFAULT 'student',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS subjects (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  subject_code VARCHAR(30) NOT NULL UNIQUE,
+  subject_name VARCHAR(150) NOT NULL,
+  teacher_id INT UNSIGNED NULL,
+  description TEXT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_subject_teacher FOREIGN KEY (teacher_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS enrollments (
+  student_id INT UNSIGNED NOT NULL,
+  subject_id INT UNSIGNED NOT NULL,
+  PRIMARY KEY (student_id, subject_id),
+  FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS materials (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  subject_id INT UNSIGNED NOT NULL,
+  title VARCHAR(180) NOT NULL,
+  description TEXT NULL,
+  file_name VARCHAR(255) NOT NULL,
+  uploaded_by INT UNSIGNED NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
+  FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS activities (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  subject_id INT UNSIGNED NOT NULL,
+  title VARCHAR(180) NOT NULL,
+  instructions TEXT NOT NULL,
+  activity_type ENUM('assignment','quiz') NOT NULL DEFAULT 'assignment',
+  due_at DATETIME NULL,
+  created_by INT UNSIGNED NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS submissions (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  activity_id INT UNSIGNED NOT NULL,
+  student_id INT UNSIGNED NOT NULL,
+  answer_text TEXT NULL,
+  file_name VARCHAR(255) NULL,
+  status ENUM('submitted','graded') NOT NULL DEFAULT 'submitted',
+  score DECIMAL(6,2) NULL,
+  feedback TEXT NULL,
+  submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY unique_student_activity (activity_id, student_id),
+  FOREIGN KEY (activity_id) REFERENCES activities(id) ON DELETE CASCADE,
+  FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS announcements (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(180) NOT NULL,
+  body TEXT NOT NULL,
+  created_by INT UNSIGNED NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+);

@@ -1,0 +1,8 @@
+<?php
+require_once __DIR__ . '/../includes/auth.php'; require_role(['student']); require __DIR__ . '/../config/database.php';
+$pageTitle='My Subjects / Learning Materials'; $stmt=$pdo->prepare('SELECT s.id,s.subject_code,s.subject_name,s.description FROM subjects s JOIN enrollments en ON en.subject_id=s.id WHERE en.student_id=? ORDER BY s.subject_name'); $stmt->execute([$_SESSION['user_id']]); $subjects=$stmt->fetchAll();
+require __DIR__ . '/../includes/header.php'; ?>
+<section class="panel"><div class="panel-head"><h3>Enrolled subjects</h3></div><?php if(!$subjects): ?><p class="empty">You are not enrolled in any subject yet.</p><?php endif; ?>
+<?php foreach($subjects as $s): ?><article class="subject-block"><h3><?= e($s['subject_name']) ?></h3><span class="tag"><?= e($s['subject_code']) ?></span><p class="muted"><?= e($s['description'] ?: 'No description provided.') ?></p><h4>Learning materials</h4>
+<?php $m=$pdo->prepare('SELECT title,description,file_name,created_at FROM materials WHERE subject_id=? ORDER BY created_at DESC'); $m->execute([$s['id']]); $materials=$m->fetchAll(); if(!$materials): ?><p class="empty">No materials uploaded.</p><?php else: foreach($materials as $mat): ?><div class="activity-row"><div><strong><?= e($mat['title']) ?></strong><small><?= e($mat['description']) ?></small><small>Added <?= e($mat['created_at']) ?></small></div><a class="btn small-btn" href="../uploads/<?= rawurlencode(basename($mat['file_name'])) ?>" download>Download</a></div><?php endforeach; endif; ?></article><?php endforeach; ?></section>
+<?php require __DIR__ . '/../includes/footer.php'; ?>

@@ -1,0 +1,4 @@
+<?php
+require_once __DIR__ . '/../includes/auth.php'; require_role(['admin']); require __DIR__ . '/../config/database.php'; $pageTitle='Manage Accounts'; $rows=$pdo->query('SELECT full_name,username,email,role,created_at FROM users ORDER BY role,full_name')->fetchAll();require __DIR__ . '/../includes/header.php'; ?>
+<section class="panel"><div class="panel-head"><h3>User accounts</h3></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Created</th></tr></thead><tbody><?php foreach($rows as $r): ?><tr><td><?= e($r['full_name']) ?></td><td><?= e($r['username']) ?></td><td><?= e($r['email']) ?></td><td><span class="tag"><?= e(ucfirst($r['role'])) ?></span></td><td><?= e($r['created_at']) ?></td></tr><?php endforeach; ?></tbody></table></div><p class="muted section-gap">Account creation and editing can be added in the next phase.</p></section>
+<?php require __DIR__ . '/../includes/footer.php'; ?>
